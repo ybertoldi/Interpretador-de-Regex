@@ -35,12 +35,35 @@ ll_node *llnew(NfaNode *val) {
   return new;
 }
 
-void llappend(ll_node *head, NfaNode *val) {
-  ll_node *cur = head;
-  while (cur->next != NULL)
-    cur = cur->next;
+ll_node *llcopy(ll_node *l) {
+  ll_node *nl = NULL;
+  while (l) {
+    llappend_orcreate(&nl, l->val);
+    l = l->next;
+  }
+  return nl;
+}
 
-  cur->next = llnew(val);
+void llappend(ll_node *head, NfaNode *val) {
+  ll_node *cur = head, *toappend;
+
+  while (cur) {
+    if (cur->val == val)
+      return;
+    if (cur->next == NULL) 
+      toappend = cur;
+
+    cur = cur->next;
+  }
+  toappend->next = llnew(val);
+}
+
+void llcat(ll_node *head, ll_node *new) {
+  ll_node *cur = head;
+  while (cur->next != NULL) {
+    cur = cur->next;
+  }
+  cur->next = new;
 }
 
 void llappend_orcreate(ll_node **pnode, NfaNode *val) {
@@ -48,6 +71,26 @@ void llappend_orcreate(ll_node **pnode, NfaNode *val) {
     llappend(*(pnode), val);
   else
     *(pnode) = llnew(val);
+}
+
+bool llcontains(ll_node *l, NfaNode *val) {
+  ll_node *cur = l;
+  while (cur) {
+    if (cur->val == val) {
+      return true;
+    }
+    cur = cur->next;
+  }
+  return false;
+}
+
+void llfree(ll_node *l) {
+  ll_node *dl;
+  while (l) {
+    dl = l;
+    l = l->next;
+    free(dl);
+  }
 }
 
 void llprint(ll_node *head) {
@@ -98,6 +141,7 @@ void print_dfa_node(DfaNode *node) {
 
 bool dfa_valida_cadeia(DfaNode *estado_inicial, char *cadeia) {
   bool char_invalido = false;
+
   DfaNode *est_atual = estado_inicial;
   while (*cadeia != '\0' && *cadeia != '\n') {
     if (!dfa_node_move(&est_atual, *(cadeia++))) {
@@ -165,6 +209,36 @@ void print_nfa_node(NfaNode *node) {
   printf("} |\n");
 }
 
+void get_full_epilson(ll_node *estados) {
+  ll_node *tovisit, *visited = NULL, *res = NULL, *estados_copy, *dlt1, *dlt2;
+  estados_copy = llcopy(estados);
+  dlt2 = estados_copy;
+
+  while (estados_copy) {
+    tovisit = llnew(estados_copy->val);
+    dlt1 = tovisit;
+
+    while (tovisit) {
+      NfaNode *cur = tovisit->val;
+      llappend(estados, cur);
+
+      ll_node *cur_epilson = cur->map.epsilon;
+      while (cur_epilson) {
+        if (!llcontains(visited, cur_epilson->val)) {
+          llappend(tovisit, cur_epilson->val);
+          llappend_orcreate(&visited, cur_epilson->val);
+        }
+        cur_epilson = cur_epilson->next;
+      }
+
+      tovisit = tovisit->next;
+    }
+    estados_copy = estados_copy->next;
+    llfree(dlt1);
+  }
+  llfree(dlt2);
+}
+
 void nfa_move(ll_node *estados_atuais, ll_node **novos_estados, char input) {
   ll_node *nova_lista = NULL, *transicoes, *e_transicoes, *cur;
 
@@ -188,8 +262,10 @@ void nfa_move(ll_node *estados_atuais, ll_node **novos_estados, char input) {
     free(cur);
   }
 
+  get_full_epilson(nova_lista);
   *novos_estados = nova_lista;
 }
+
 bool nfa_valida_cadeia(NfaNode *estado_inicial, char *cadeia) {
   bool erro_leitura = false;
   ll_node *nodes = llnew(estado_inicial);
@@ -249,3 +325,18 @@ bool nfa_teste(NfaNode *estado_inicial, char *cadeia) {
 
   return aceito;
 }
+
+
+//TODO: Arrumar este problema:
+//
+//digite uma cadeia na forma abb: abbb
+// estado inicial: {q0}
+// a -> {q0f, q1}
+// b -> {q1, q1f, q2}
+// b -> {q1f, q2, q2f}
+// b -> {q2, q2f}
+//
+// Estado Aceito!
+//
+//
+// q0f deve ser substituido imediatamente por q1 ao ler 'a' e por ai vai...

@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdint.h>
 
 #ifndef AUTOMATA_H
@@ -16,6 +17,7 @@
 
 #define BUILD_NFA_NODE_FINAL(s_name)                                           \
   {.name = s_name, .map = init_nfa_map(), .is_final = true}
+
 
 // AUTOMATOS DETERMINISTICOS
 typedef struct dfa_node_map {
@@ -59,14 +61,22 @@ ll_node *llnew(NfaNode *val);
 void llappend(ll_node *head, NfaNode *val);
 void llappend_orcreate(ll_node **pnode, NfaNode *val);
 void llprint(ll_node *head);
+bool llcontains(ll_node *l, NfaNode *val);
+ll_node *llcopy(ll_node *l) ;
+void llcat(ll_node *head, ll_node *new_end) ;
+void llfree(ll_node *l) ;
+
+
 
 // funcoes DFA
+DfaNode *dfalloc(char *name, bool isfinal);
 void dfa_add_delta(DfaNode *node, char key, DfaNode *value);
 bool nfa_node_move(DfaNode **node, char input);
 void print_dfa_node(DfaNode *node);
 bool dfa_valida_cadeia(DfaNode *estado_inicial, char *cadeia);
 
 // funcoes NFA
+NfaNode *nfalloc(char *name, bool isfinal);
 ll_node *nfa_node_get(NfaNode *node, char key);
 void nfa_add_delta(NfaNode *node, char key, NfaNode *value);
 void print_nfa_node(NfaNode *node);
