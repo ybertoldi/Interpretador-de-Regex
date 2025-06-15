@@ -21,6 +21,7 @@ char *nome_final(char *nome) {
 }
 /* ------------------------------------------ */
 
+
 NfAutomata novo_automato(char *nome, char c) {
   NfaNode *i = nfalloc(nome, false);
   NfaNode *f = nfalloc(nome_final(nome), true);
@@ -123,7 +124,7 @@ NfaNode *automata_copy_aux(NfaNode *node, AuMap *copied_nodes) {
   return node_copy;
 }
 
-NfAutomata automata_copy(NfAutomata n) {
+NfAutomata AutomataCopy(NfAutomata n) {
   AuMap copied_nodes;
   copied_nodes.size = 0;
 
