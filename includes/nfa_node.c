@@ -96,6 +96,14 @@ ll_node *nfa_node_get(NfaNode *node, char key) {
   return nfa_map_get(&node->map, key);
 }
 
+NfaNode *nfalloc(char *name, bool isfinal) {
+  NfaNode *n = malloc(sizeof(NfaNode));
+  n->name = name;
+  n->map = init_nfa_map();
+  n->is_final = isfinal;
+  return n;
+}
+
 void nfa_add_delta(NfaNode *node, char key, NfaNode *value) {
   NfaMap *map = &(node->map);
 
