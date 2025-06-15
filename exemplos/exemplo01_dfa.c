@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "automata.h"
+#include "../includes/dfa_node.h"
 
 int main() {
   char *cadeia = malloc(100 * sizeof(char));

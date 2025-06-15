@@ -1,10 +1,6 @@
 #include <stdbool.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-
-// aa|b -> aa.b|
-// a*ba* -> a*b.a*.j`
 
 char *re2post(char **reg, int level) {
   char *buff = malloc(8000), *bp, *temp, *todelete;
@@ -21,22 +17,17 @@ char *re2post(char **reg, int level) {
         napp--;
       }
       temp = re2post(reg, level + 1);
-			todelete = temp;
+      todelete = temp;
       while (*temp) {
         *bp++ = *temp++;
       }
       napp++;
-			free(todelete);
+      free(todelete);
       break;
 
     case ')':
       if (level > 0)
         get_out = true;
-      break;
-
-    case '+':
-    case '*':
-      *bp++ = **reg;
       break;
 
     case '|':
@@ -46,6 +37,11 @@ char *re2post(char **reg, int level) {
       }
       napp--;
       nalt++;
+      break;
+
+    case '+':
+    case '*':
+      *bp++ = **reg;
       break;
 
     default:
@@ -58,28 +54,16 @@ char *re2post(char **reg, int level) {
       break;
     }
 
-    if (get_out) {
+    if (get_out) 
       break;
-    }
   }
 
-  while (napp-- > 1) {
+  while (napp-- > 1) 
     *bp++ = '.';
-  }
-  while (nalt-- > 0) {
+  while (nalt-- > 0) 
     *bp++ = '|';
-  }
 
   *bp++ = '\0';
-
   return buff;
 }
 
-int main() {
-  char *teste = malloc(100);
-  printf("valor: ");
-  scanf("%s", teste);
-  printf("%s\n", re2post(&teste, 0));
-
-  return 0;
-}

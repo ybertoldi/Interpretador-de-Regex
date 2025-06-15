@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define AUTOMATA_H_TESTE
-#include "automata.h"
+#define NFA_NODE_TESTE
+#include "../includes/nfa_node.h"
 
 int main() {
   char *cadeia = malloc(100 * sizeof(char));
