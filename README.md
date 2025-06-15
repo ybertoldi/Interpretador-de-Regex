@@ -37,8 +37,8 @@ Trata-se de um programa que converte uma expressão regular em AFND segiundo tr�
 ## Como Rodar
 clone o repositório e execute o script BUILD.sh:
 ```bash
-bash BUILD.sh
-cd execs
+$ bash BUILD.sh
+$ cd execs
 ```
 Serão gerados 4 executaveis, sendo 3 desses exemplos das funcionalidades dos headers e o último uma implementação do 
 algoritmo mencionado acima.
