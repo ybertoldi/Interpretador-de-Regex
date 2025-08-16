@@ -11,8 +11,8 @@ Trata-se de um programa que converte uma expressão regular em AFND segiundo tr�
   |    Regex     |   Notação Polonesa Inversa   |
   | ------------ | -----------------------------|
   |     aac      |            aa.c.             |
-  |   ab(b\|d)*   |           ab.bd\|*.           |
-  |   a*(b\|c)+   |           a*bc\|+.            |
+  |   ab(b\|d)\*   |           ab.bd\|\*.           |
+  |   a\*(b\|c)+   |           a*bc\|+.            |
 
   A implementação deste passo está em [regex2post.c](includes/regex2post.c).
 
@@ -32,7 +32,7 @@ Trata-se de um programa que converte uma expressão regular em AFND segiundo tr�
 
 - Navegar o AFND gerado.
  
-  Esse passo é feito ao fim de [main.c](main.c) e seu algoritmo está implementado nas funções nfa_valida_cadeia e        nfa_teste em [nfa_node.c](includes/nfa_node.c). Trata-se de uma variação de um algoritmo BFS padrão.
+  Esse passo é feito ao fim de [main.c](main.c) e seu algoritmo está implementado nas funções nfa_valida_cadeia e nfa_teste em [nfa_node.c](includes/nfa_node.c). Trata-se de uma variação de um algoritmo BFS padrão.
 
 ## Como Rodar
 clone o repositório e execute o script BUILD.sh:

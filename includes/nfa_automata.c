@@ -124,7 +124,7 @@ NfaNode *automata_copy_aux(NfaNode *node, AuMap *copied_nodes) {
   return node_copy;
 }
 
-NfAutomata AutomataCopy(NfAutomata n) {
+NfAutomata automata_copy(NfAutomata n) {
   AuMap copied_nodes;
   copied_nodes.size = 0;
 

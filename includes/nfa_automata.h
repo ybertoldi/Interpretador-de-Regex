@@ -1,7 +1,7 @@
+#include <stdbool.h>
 
 #ifndef NFA_AUTOMATA_H
 #define NFA_AUTOMATA_H
-
 #include "nfa_node.h"
 typedef struct {
   NfaNode *key[8000];
