@@ -1,7 +1,7 @@
 # Interpretador de Regex
 Projeto baseado nos artigos de [Ken Thompson](https://dl.acm.org/doi/pdf/10.1145/363347.363387) e [Russ Cox](https://swtch.com/~rsc/regexp/regexp1.html).
 
-Trata-se de um programa que converte uma expressão regular em AFND segiundo três passos simples:
+Trata-se de um programa que converte uma expressão regular em AFND segiundo três passos:
 
 - Transformar a expressão regular recebida em [notação polonesa inversa](https://pt.wikipedia.org/wiki/Nota%C3%A7%C3%A3o_polonesa_inversa) (ou postfix), evidenciando as operações
   de concatenação e retirando os parenteses.
