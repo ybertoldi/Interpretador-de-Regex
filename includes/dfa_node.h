@@ -33,8 +33,11 @@ DfaNode *dfa_map_get(DfaMap *map, char key);
 
 
 DfaNode *dfalloc(char *name, bool isfinal);
-void dfa_add_delta(DfaNode *node, char key, DfaNode *value);
-bool nfa_node_move(DfaNode **node, char input);
+void dfa_add_delta(DfaNode *src, char key, DfaNode *target);
+void dfa_add_delta_expr(DfaNode *src, const char *expr, DfaNode *target);
+
+bool dfa_node_move(DfaNode **node, char input);
+
 void print_dfa_node(DfaNode *node);
 bool dfa_valida_cadeia(DfaNode *estado_inicial, char *cadeia);
 

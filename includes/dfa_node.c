@@ -33,6 +33,74 @@ void dfa_add_delta(DfaNode *node, char key, DfaNode *value) {
   map->size++;
 }
 
+/* 
+ * mapeia todos os caracteres informados na expressao expr 
+ * do automato s para o automato t.
+ *
+ * exemplos de expressoes:
+ * "[A-Z]", "[A-Za-z]", "[A-Z]^JKL", "-*+/", "-[0-9]"
+ */
+void dfa_add_delta_expr(DfaNode *s, const char *expr, DfaNode *t){
+  int i, to_addlen, l;
+  char *invchars;
+  bool az, AZ, nums;
+
+  to_addlen = strchr(expr, '[') ? (expr - strchr(expr, '[')) : strlen(expr);
+  i = -1;
+  while (++i < to_addlen)
+    dfa_add_delta(s, expr[i], t);
+
+  if (!expr[i])
+    return;
+
+  az = AZ = nums = false;
+  if (expr[i] == '[') {
+    i++;
+    while (expr[i] != ']') {
+      if (strncmp(&expr[i], "a-z", 3) == 0) {
+        az = true;
+        i += 3;
+      } else if (strncmp(&expr[i], "A-Z", 3) == 0) {
+        AZ = true;
+        i += 3;
+      } else if (strncmp(&expr[i], "0-9", 3) == 0) {
+        nums = true;
+        i += 3;
+      } else {
+        fprintf(stderr, "cadeia invalida: %s\n", &expr[i]);
+        exit(EXIT_FAILURE);
+      }
+    }
+  }
+  i++;
+  
+  invchars = NULL;
+  if (expr[i] == '^') {
+    i++;
+    l = strlen(&expr[i]);
+    invchars = malloc(l+1);
+    strcpy(invchars, &expr[i]);
+  } 
+
+  if (az) {
+    for (i = 0; i < 26; i++)
+      if (!invchars || !strchr(invchars, i + 'a'))
+        dfa_add_delta(s, i + 'a', t);
+  }
+  if (AZ) {
+    for (i = 0; i < 26; i++)
+      if (!invchars || !strchr(invchars, i + 'A'))
+        dfa_add_delta(s, i + 'A', t);
+  }
+  if (nums) {
+    for (i = 0; i < 10; i++)
+      if (!invchars || !strchr(invchars, i + '0'))
+        dfa_add_delta(s, i + '0', t);
+  }
+
+  free(invchars);
+}
+
 bool dfa_node_move(DfaNode **node, char input) {
   DfaMap *map = &(*node)->map;
   DfaNode *mapped_node = dfa_map_get(map, input);
